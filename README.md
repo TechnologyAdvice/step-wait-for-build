@@ -1,3 +1,5 @@
+[![wercker status](https://app.wercker.com/status/ff788e3e0eb4b14e7c3363fb0f64789e/m/master "wercker status")](https://app.wercker.com/project/bykey/ff788e3e0eb4b14e7c3363fb0f64789e)
+
 ## step-wait-for-build
 
 This steps will poll the wercker API until a dependent project isnt building anymore.
