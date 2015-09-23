@@ -1,0 +1,17 @@
+name: wait-for-build
+version: 0.1.0
+description: Wait for a dependent build on another project to complete.
+keywords:
+  - build
+  - wait
+  - dependency
+properties:
+  application:
+    type: string
+    required: true
+  owner:
+    type: string
+    required: true
+  token:
+    type: string
+    required: true
