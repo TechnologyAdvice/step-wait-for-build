@@ -1,5 +1,5 @@
 name: wait-for-build
-version: 0.1.0
+version: 0.1.4
 description: Wait for a dependent build on another project to complete.
 keywords:
   - build
