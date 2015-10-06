@@ -28,3 +28,8 @@ if this was to be used on nhumrich/blog you would use:
 
 
 
+You can also add:
+
+    is_deploy: true
+
+if you would like to wait on a deployment instead of a build. (added 0.2.0)

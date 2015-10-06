@@ -1,8 +1,9 @@
 name: wait-for-build
-version: 0.1.4
-description: Wait for a dependent build on another project to complete.
+version: 0.2.0
+description: Wait for a dependent build/deploy on another project to complete.
 keywords:
   - build
+  - deploy
   - wait
   - dependency
 properties:
@@ -15,3 +16,6 @@ properties:
   token:
     type: string
     required: true
+  is_deploy:
+    type: boolean
+    default: false
