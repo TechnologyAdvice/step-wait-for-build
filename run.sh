@@ -10,8 +10,30 @@ fi
 
 WWFB_ENDPOINT="https://app.wercker.com/api/v3/applications/$WERCKER_WAIT_FOR_BUILD_OWNER/$WERCKER_WAIT_FOR_BUILD_APPLICATION/$WWFB_ENDPOINT_SUFFIX"
 
-function get_status { curl -s -H "Content-type: application/json" -H "Authorization: Bearer $WERCKER_WAIT_FOR_BUILD_TOKEN" "$WWFB_ENDPOINT" | "$WERCKER_STEP_ROOT/jq" '.[0] | .status'; }
+get_incomplete() {
+    RESP=$(curl -s -H "Content-type: application/json" -H "Authorization: Bearer $WERCKER_WAIT_FOR_BUILD_TOKEN" "$WWFB_ENDPOINT")
+    if [ ${RESP:0:1} == "[" ]; then
+        EVENT_COUNT=$(echo $RESP | grep -o "{" | wc -w)
+        DONE_COUNT=$(echo $RESP | grep -o "\"finished\"" | wc -w)
+        expr $EVENT_COUNT - $DONE_COUNT
+    else
+        echo "ERROR: Unexpected response: $RESP"
+    fi
+}
 
-WWFB_STATUS=$(get_status)
-while [ "$WWFB_STATUS" != "\"finished\"" ]; do echo "$WWFB_STATUS"; sleep 10; WWFB_STATUS=$(get_status); done;
-echo "$WWFB_MESSAGE";
+INCOMPLETE=$(get_incomplete)
+if [ ${INCOMPLETE:0:5} == "ERROR" ]; then
+    echo $INCOMPLETE
+    exit 1
+fi
+while [[ $INCOMPLETE > 1 ]]; do
+    echo "$(expr $INCOMPLETE - 1) dependecies remaining"
+    sleep 10;
+    INCOMPLETE=$(get_incomplete)
+    if [ ${INCOMPLETE:0:5} == "ERROR" ]; then
+        echo $INCOMPLETE
+        exit 1
+    fi
+done
+
+echo "$WWFB_MESSAGE"
