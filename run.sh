@@ -15,6 +15,7 @@ get_incomplete() {
     if [ "${RESP:0:1}" == "[" ]; then
         # shellcheck disable=SC2126
         EVENT_COUNT=$(echo "$RESP" | grep -o "{" | wc -w)
+        # shellcheck disable=SC2126
         DONE_COUNT=$(echo "$RESP" | grep -o "\"finished\"" | wc -w)
         echo $((EVENT_COUNT - DONE_COUNT))
     else
