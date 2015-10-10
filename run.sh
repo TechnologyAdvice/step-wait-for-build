@@ -13,9 +13,10 @@ WWFB_ENDPOINT="https://app.wercker.com/api/v3/applications/$WERCKER_WAIT_FOR_BUI
 get_incomplete() {
     RESP=$(curl -s -H "Content-type: application/json" -H "Authorization: Bearer $WERCKER_WAIT_FOR_BUILD_TOKEN" "$WWFB_ENDPOINT")
     if [ "${RESP:0:1}" == "[" ]; then
+        # shellcheck disable=SC2126
         EVENT_COUNT=$(echo "$RESP" | grep -o "{" | wc -w)
         DONE_COUNT=$(echo "$RESP" | grep -o "\"finished\"" | wc -w)
-        echo $(($EVENT_COUNT - $DONE_COUNT))
+        echo $((EVENT_COUNT - DONE_COUNT))
     else
         echo "ERROR: Unexpected response: $RESP"
     fi
@@ -27,7 +28,7 @@ if [ "${INCOMPLETE:0:5}" == "ERROR" ]; then
     exit 1
 fi
 while [[ "$INCOMPLETE" -gt 1 ]]; do
-    echo "$(($INCOMPLETE - 1)) dependecies remaining"
+    echo "$((INCOMPLETE - 1)) dependecies remaining"
     sleep 10;
     INCOMPLETE=$(get_incomplete)
     if [ "${INCOMPLETE:0:5}" == "ERROR" ]; then
